@@ -10,6 +10,9 @@ flp21-fun
 *.hi
 *.o
 
+# VSCode
+.vscode/
+
 # Node artifact files
 node_modules/
 dist/
