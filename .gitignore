@@ -3,6 +3,13 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
+# The output binary
+flp21-fun
+
+# Compilation output files
+*.hi
+*.o
+
 # Node artifact files
 node_modules/
 dist/
