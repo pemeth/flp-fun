@@ -46,10 +46,33 @@ readPLG fh = do
     else
         return ()
 
-    -- TODO finish reading the PLG from the Handle
+    termLine <- hGetLine fh
+    let term = parseCommaSeparatedChars termLine
 
-    return (PLG nterm [] 'a' [])
+    if not $ foldl (&&) True (map isLower term) then
+        error "Terminals must be lowercase"
+    else
+        return ()
 
+    startNtermLine <- hGetLine fh
+    let startNterm = parseStartingNterm startNtermLine
+
+    if not $ isAlpha startNterm then
+        error "Starting non-terminal invalid"
+    else
+        return ()
+
+    return (PLG nterm term startNterm [])
+
+{-
+Take a String and check if it has one uppercase letter.
+If it does, return the letter, if not return a '+' character.
+-}
+parseStartingNterm :: String -> Char
+parseStartingNterm (c:"")
+    | isUpper c = c
+    | otherwise = '+'
+parseStartingNterm _ = '+'
 
 {-
 Parse a string, in which there should only be letters separated by commas
