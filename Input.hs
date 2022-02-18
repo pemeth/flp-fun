@@ -62,7 +62,51 @@ readPLG fh = do
     else
         return ()
 
-    return (PLG nterm term startNterm [])
+    rules <- parseRules fh
+
+    -- TODO check if:
+        -- the startNterm is in the nterm set
+        -- the rules are using only defined terms and nterms
+    -- TODO deduplicate nterms and terms
+
+    return (PLG nterm term startNterm rules)
+
+{-
+Parse the rules from Handle 'fh', one per each line.
+-}
+parseRules :: Handle -> IO [(Char, [Char])]
+parseRules fh = do
+    isEOF <- hIsEOF fh
+
+    if not isEOF then do
+        ruleLine <- hGetLine fh
+        nextRule <- parseRules fh
+        return ((parseRule ruleLine):nextRule)
+    else
+        return []
+
+{-
+Parse a single PLG rule string. Checks for valid PLG rule syntax,
+but does not check if the terminals and non-terminals are valid
+i.e. if they have been declared on the first two lines of the PLG definition file.
+-}
+parseRule :: String -> (Char, [Char])
+parseRule (c:'-':'>':rest)
+    | isUpper c && (not $ isSimple rest) = (c, parseRuleRightSide rest)
+    | isLower c = error ("Left side of rule '" ++ [c,'-','>'] ++ rest ++ "' is a terminal")
+    | otherwise = error ("Rule '" ++ [c,'-','>'] ++ rest ++ "' not valid")
+    where   isSimple (c:"") = isUpper c
+            isSimple _      = False
+            parseRuleRightSide "#" = ['#']
+            parseRuleRightSide (s:"")
+                | isUpper s = s:[]
+                | otherwise = error ("Right side of rule '" ++ [c,'-','>'] ++ rest ++ "' does not end in a non-terminal")
+            parseRuleRightSide (s:ss)
+                | isLower s = s:(parseRuleRightSide ss)
+                | isUpper s = error ("Right side of rule '" ++ [c,'-','>'] ++ rest ++ "' has a non-terminal elsewhere than at the end")
+                | otherwise = error ("Rule '" ++ [c,'-','>'] ++ rest ++ "' is invalid")
+parseRule rule = error ("Rule '" ++ rule ++ "' not valid")
+
 
 {-
 Take a String and check if it has one uppercase letter.
