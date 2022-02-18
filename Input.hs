@@ -65,15 +65,31 @@ readPLG fh = do
 
     rules <- parseRules fh
 
-    -- TODO check if:
-        -- the startNterm is in the nterm set
-        -- the rules are using only defined terms and nterms
-
     let ntermsDedup = deDuplicate nterms
     let termsDedup = deDuplicate terms
     let rulesDedup = deDuplicate rules
 
+    if not $ rulesUsingDefinedSymbols rulesDedup ('#':(ntermsDedup ++ termsDedup)) then
+        error "At least one rule is using an undefined symbol"
+    else
+        return ()
+
+    if not $ startNterm `elem` ntermsDedup then
+        error "The starting non-terminal is not defined"
+    else
+        return ()
+
     return (PLG ntermsDedup termsDedup startNterm rulesDedup)
+
+{-
+Check if the defined rules are only using previously defined symbols.
+-}
+rulesUsingDefinedSymbols :: [(Char, [Char])] -> [Char] -> Bool
+rulesUsingDefinedSymbols rules nterms = leftSide rules && rightSide rules
+    where   leftSide []         = True
+            leftSide (r:rs)     = (fst r) `elem` nterms && leftSide rs
+            rightSide []        = True
+            rightSide (r:rs)    = all (`elem` nterms) (snd r) && rightSide rs
 
 -- TODO a deduplication function, where Ord is not needed
 {-
