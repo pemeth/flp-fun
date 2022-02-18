@@ -10,6 +10,7 @@ module Input where
 import System.Console.GetOpt
 import System.IO
 import Data.Char
+import Data.List
 
 import Lib
 
@@ -38,18 +39,18 @@ Take a file handle and extract the PLG.
 -}
 readPLG :: Handle -> IO (PLG)
 readPLG fh = do
-    ntermLine <- hGetLine fh
-    let nterm = parseCommaSeparatedChars ntermLine
+    ntermsLine <- hGetLine fh
+    let nterms = parseCommaSeparatedChars ntermsLine
 
-    if not $ foldl (&&) True (map isUpper nterm) then
+    if not $ foldl (&&) True (map isUpper nterms) then
         error "Non-terminals must be uppercase"
     else
         return ()
 
-    termLine <- hGetLine fh
-    let term = parseCommaSeparatedChars termLine
+    termsLine <- hGetLine fh
+    let terms = parseCommaSeparatedChars termsLine
 
-    if not $ foldl (&&) True (map isLower term) then
+    if not $ foldl (&&) True (map isLower terms) then
         error "Terminals must be lowercase"
     else
         return ()
@@ -67,9 +68,23 @@ readPLG fh = do
     -- TODO check if:
         -- the startNterm is in the nterm set
         -- the rules are using only defined terms and nterms
-    -- TODO deduplicate nterms and terms
 
-    return (PLG nterm term startNterm rules)
+    let ntermsDedup = deDuplicate nterms
+    let termsDedup = deDuplicate terms
+    let rulesDedup = deDuplicate rules
+
+    return (PLG ntermsDedup termsDedup startNterm rulesDedup)
+
+-- TODO a deduplication function, where Ord is not needed
+{-
+Deduplicate items in a list. The list is returned sorted.
+-}
+deDuplicate :: (Eq a, Ord a) => [a] -> [a]
+deDuplicate list = deDuplicate' (sort list) []
+    where   deDuplicate' [] _ = []
+            deDuplicate' (l:ls) dd
+                | not $ (l `elem` dd)   = l:(deDuplicate' ls (l:dd))
+                | otherwise             = deDuplicate' ls (l:dd)
 
 {-
 Parse the rules from Handle 'fh', one per each line.
