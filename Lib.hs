@@ -12,8 +12,8 @@ import System.IO
 -- PLG == Prava Linearni Gramatika
 -- For the sake of consistency, this will not be translated.
 data PLG = PLG {
-    nterm :: [Char], -- Non-terminals
-    term :: [Char],  -- Terminals
+    nterms :: [Char], -- Non-terminals
+    terms :: [Char],  -- Terminals
     start :: Char,   -- Starting non-terminal
     rules :: [(Char, [Char])]   -- Rules of the PLG
 } deriving (Show)
