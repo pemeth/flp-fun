@@ -10,6 +10,7 @@ import System.Environment
 import System.IO
 
 import Input
+import Lib
 
 main = do
     (opt, file) <- getArgs >>= argParse
@@ -19,6 +20,29 @@ main = do
             else
                 withFile file ReadMode readPLG
 
-    putStrLn $ show plg
-    putStrLn $ show opt
-    putStrLn file
+    case opt of Print -> printPLG plg
+    -- TODO case for Opt1 and Opt2
+
+{-
+Print out the PLG as defined for the `-i` program option.
+-}
+printPLG :: PLG -> IO ()
+printPLG plg = do
+    let ntermsPrintable = makePrintableSymbols $ (nterms plg)
+    let termsPrintable = makePrintableSymbols $ (terms plg)
+    let startPrintable = ((start plg):"")
+    let rulesPrintable = makePrintableRules (rules plg)
+
+    putStrLn ntermsPrintable
+    putStrLn termsPrintable
+    putStrLn startPrintable
+    printRules rulesPrintable
+
+    where   makePrintableSymbols (s:[]) = s:""
+            makePrintableSymbols (s:ss) = s:',':(makePrintableSymbols ss)
+            makePrintableRules ((left,right):[]) = ((left:"") ++ "->" ++ right):[]
+            makePrintableRules ((left,right):rest) = ((left:"") ++ "->" ++ right):(makePrintableRules rest)
+            printRules (r:[]) = putStrLn r
+            printRules (r:rs) = do
+                putStrLn r
+                printRules rs
