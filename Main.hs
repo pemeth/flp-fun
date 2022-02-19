@@ -46,3 +46,31 @@ printPLG plg = do
             printRules (r:rs) = do
                 putStrLn r
                 printRules rs
+
+{-
+Print out an NKA.
+-}
+printNKA :: NKA -> IO ()
+printNKA nka = do
+    let statesPrintable = makePrintableIntegers (states nka)
+    let symbolsPrintable = makePrintableSymbols (symbols nka)
+    let startStatePrintable = show $ startState nka
+    let endStatesPrintable = makePrintableIntegers (endStates nka)
+    let transitionsPrintable = makePrintableTransitions (transitions nka)
+
+    putStrLn statesPrintable
+    putStrLn symbolsPrintable
+    putStrLn startStatePrintable
+    putStrLn endStatesPrintable
+    printTransitions transitionsPrintable
+
+    where   makePrintableIntegers (i:[]) = (show i)
+            makePrintableIntegers (i:is) = (show i)++","++(makePrintableIntegers is)
+            makePrintableSymbols (s:[]) = s:""
+            makePrintableSymbols (s:ss) = s:',':(makePrintableSymbols ss)
+            makePrintableTransitions (t:[]) = ((show $ fst3 t) ++ "," ++ (snd3 t:"") ++ "," ++ (show $ thr3 t)):[]
+            makePrintableTransitions (t:ts) = ((show $ fst3 t) ++ "," ++ (snd3 t:"") ++ "," ++ (show $ thr3 t)):(makePrintableTransitions ts)
+            printTransitions (t:[]) = putStrLn t
+            printTransitions (t:ts) = do
+                putStrLn t
+                printTransitions ts
