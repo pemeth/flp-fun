@@ -3,3 +3,4 @@ a,b
 A
 A->aB
 B->bB
+B->#
