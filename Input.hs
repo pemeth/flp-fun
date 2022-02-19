@@ -91,7 +91,7 @@ rulesUsingDefinedSymbols rules nterms = leftSide rules && rightSide rules
             rightSide []        = True
             rightSide (r:rs)    = all (`elem` nterms) (snd r) && rightSide rs
 
--- TODO a deduplication function, where Ord is not needed
+-- TODO a deduplication function, where Ord is not needed - i.e. without sorting
 {-
 Deduplicate items in a list. The list is returned sorted.
 -}

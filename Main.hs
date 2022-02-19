@@ -9,6 +9,7 @@ import Data.List
 import System.Environment
 import System.IO
 
+import Algos
 import Input
 import Lib
 
@@ -21,7 +22,8 @@ main = do
                 withFile file ReadMode readPLG
 
     case opt of Print -> printPLG plg
-    -- TODO case for Opt1 and Opt2
+                Opt2  -> printNKA $ plgSimple2nka plg
+    -- TODO case for Opt1
 
 {-
 Print out the PLG as defined for the `-i` program option.
