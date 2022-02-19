@@ -38,7 +38,8 @@ printPLG plg = do
     putStrLn startPrintable
     printRules rulesPrintable
 
-    where   makePrintableSymbols (s:[]) = s:""
+    where   makePrintableSymbols [] = ""
+            makePrintableSymbols (s:[]) = s:""
             makePrintableSymbols (s:ss) = s:',':(makePrintableSymbols ss)
             makePrintableRules ((left,right):[]) = ((left:"") ++ "->" ++ right):[]
             makePrintableRules ((left,right):rest) = ((left:"") ++ "->" ++ right):(makePrintableRules rest)
@@ -64,7 +65,8 @@ printNKA nka = do
     putStrLn endStatesPrintable
     printTransitions transitionsPrintable
 
-    where   makePrintableIntegers (i:[]) = (show i)
+    where   makePrintableIntegers [] = ""
+            makePrintableIntegers (i:[]) = (show i)
             makePrintableIntegers (i:is) = (show i)++","++(makePrintableIntegers is)
             makePrintableSymbols (s:[]) = s:""
             makePrintableSymbols (s:ss) = s:',':(makePrintableSymbols ss)
