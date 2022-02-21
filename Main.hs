@@ -30,10 +30,10 @@ Print out the PLG as defined for the `-i` program option.
 -}
 printPLG :: PLG -> IO ()
 printPLG plg = do
-    let ntermsPrintable = makePrintableSymbols $ (nterms plg)
-    let termsPrintable = makePrintableSymbols $ (terms plg)
-    let startPrintable = ((start plg):"")
-    let rulesPrintable = makePrintableRules (rules plg)
+    let ntermsPrintable = makePrintableSymbols $ nterms plg
+    let termsPrintable = makePrintableSymbols $ terms plg
+    let startPrintable = makePrintableStart $ start plg
+    let rulesPrintable = makePrintableRules $ rules plg
 
     putStrLn ntermsPrintable
     putStrLn termsPrintable
@@ -41,10 +41,19 @@ printPLG plg = do
     printRules rulesPrintable
 
     where   makePrintableSymbols [] = ""
-            makePrintableSymbols (s:[]) = s:""
-            makePrintableSymbols (s:ss) = s:',':(makePrintableSymbols ss)
-            makePrintableRules ((left,right):[]) = ((left:"") ++ "->" ++ right):[]
-            makePrintableRules ((left,right):rest) = ((left:"") ++ "->" ++ right):(makePrintableRules rest)
+            makePrintableSymbols ((Symbol c num):[])
+                | num >= 0  = (c:(show num))
+                | otherwise = c:""
+            makePrintableSymbols ((Symbol c num):ss)
+                | num >= 0  = (c:(show num)) ++ "," ++ (makePrintableSymbols ss)
+                | otherwise = (c:",") ++ (makePrintableSymbols ss)
+            makePrintableRules [] = []
+            makePrintableRules (((Symbol c num),right):rest)
+                | num >= 0  = ((c:(show num)) ++ "->" ++ (convertSymbolsToChars right)):(makePrintableRules rest)
+                | otherwise = ((c:"") ++ "->" ++ (convertSymbolsToChars right)):(makePrintableRules rest)
+            makePrintableStart (Symbol c num)
+                | num >= 0 = c:(show num)
+                | otherwise = c:""
             printRules (r:[]) = putStrLn r
             printRules (r:rs) = do
                 putStrLn r

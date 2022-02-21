@@ -39,10 +39,11 @@ Take a file handle and extract the PLG.
 -}
 readPLG :: Handle -> IO (PLG)
 readPLG fh = do
+    -- TODO check after each line if there is an EOF - if the input is incomplete, parsing crashes
     ntermsLine <- hGetLine fh
-    let nterms = parseCommaSeparatedChars ntermsLine
+    let ntermsChar = parseCommaSeparatedChars ntermsLine
 
-    if not $ foldl (&&) True (map isUpper nterms) then
+    if not $ foldl (&&) True (map isUpper ntermsChar) then
         error "Non-terminals must be uppercase"
     else
         return ()
@@ -65,7 +66,7 @@ readPLG fh = do
 
     rules <- parseRules fh
 
-    let ntermsDedup = deDuplicate nterms
+    let ntermsDedup = deDuplicate ntermsChar
     let termsDedup = deDuplicate terms
     let rulesDedup = deDuplicate rules
 
@@ -79,10 +80,28 @@ readPLG fh = do
     else
         return ()
 
-    return (PLG ntermsDedup termsDedup startNterm rulesDedup)
+    let startNterm' = (Symbol startNterm noNumbering)
+
+    return (PLG (convertCharsToSymbols ntermsDedup) (convertCharsToSymbols termsDedup) startNterm' (convertRules rulesDedup))
 
 {-
-Check if the defined rules are only using previously defined symbols.
+Take an arbitrary list of Chars and promote it to a list of Symbols.
+All the Symbols will have -1 as their numbering - i.e. no numbering is applied.
+-}
+convertCharsToSymbols :: [Char] -> [Symbol]
+convertCharsToSymbols [] = []
+convertCharsToSymbols (c:cs) = (Symbol c noNumbering):(convertCharsToSymbols cs)
+
+{-
+Convert Char based rules to a Symbol based representation.
+Similar to `convertCharsToSymbols`.
+-}
+convertRules :: [(Char, [Char])] -> [(Symbol, [Symbol])]
+convertRules [] = []
+convertRules ((crLeft, crRight):crs) = ((Symbol crLeft noNumbering, (convertCharsToSymbols crRight))):(convertRules crs)
+
+{-
+Check if the defined rules are using only previously defined symbols.
 -}
 rulesUsingDefinedSymbols :: [(Char, [Char])] -> [Char] -> Bool
 rulesUsingDefinedSymbols rules nterms = leftSide rules && rightSide rules
