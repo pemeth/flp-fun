@@ -22,8 +22,8 @@ main = do
                 withFile file ReadMode readPLG
 
     case opt of Print -> printPLG plg
-                Opt2  -> printNKA $ plgSimple2nka plg
-    -- TODO case for Opt1
+                Opt1  -> printPLG $ plg2simple plg
+                Opt2  -> printNKA $ plgSimple2nka $ plg2simple plg
 
 {-
 Print out the PLG as defined for the `-i` program option.
