@@ -149,8 +149,8 @@ parseRule (c:'-':'>':rest)
             isSimple _      = False
             parseRuleRightSide "#" = ['#']
             parseRuleRightSide (s:"")
-                | isUpper s = s:[]
-                | otherwise = error ("Right side of rule '" ++ [c,'-','>'] ++ rest ++ "' does not end in a non-terminal")
+                | isAlpha s = s:[]
+                | otherwise = error ("Right side of rule '" ++ [c,'-','>'] ++ rest ++ "' has a non-terminal at the end")
             parseRuleRightSide (s:ss)
                 | isLower s = s:(parseRuleRightSide ss)
                 | isUpper s = error ("Right side of rule '" ++ [c,'-','>'] ++ rest ++ "' has a non-terminal elsewhere than at the end")
