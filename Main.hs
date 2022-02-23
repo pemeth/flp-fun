@@ -54,7 +54,7 @@ printPLG plg = do
             makePrintableStart (Symbol c num)
                 | num >= 0 = c:(show num)
                 | otherwise = c:""
-            printRules (r:[]) = putStrLn r
+            printRules [] = putStr ""
             printRules (r:rs) = do
                 putStrLn r
                 printRules rs
@@ -79,11 +79,11 @@ printNKA nka = do
     where   makePrintableIntegers [] = ""
             makePrintableIntegers (i:[]) = (show i)
             makePrintableIntegers (i:is) = (show i)++","++(makePrintableIntegers is)
-            makePrintableSymbols (s:[]) = s:""
+            makePrintableSymbols [] = ""
             makePrintableSymbols (s:ss) = s:(makePrintableSymbols ss)
-            makePrintableTransitions (t:[]) = ((show $ fst3 t) ++ "," ++ (snd3 t:"") ++ "," ++ (show $ thr3 t)):[]
+            makePrintableTransitions [] = []
             makePrintableTransitions (t:ts) = ((show $ fst3 t) ++ "," ++ (snd3 t:"") ++ "," ++ (show $ thr3 t)):(makePrintableTransitions ts)
-            printTransitions (t:[]) = putStrLn t
+            printTransitions [] = putStr ""
             printTransitions (t:ts) = do
                 putStrLn t
                 printTransitions ts
