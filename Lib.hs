@@ -44,6 +44,17 @@ data NKA = NKA {
     transitions :: [(Int, Char, Int)] -- Transition rules
 }
 
+-- TODO a deduplication function, where Ord is not needed - i.e. without sorting
+{-
+Deduplicate items in a list. The list is returned sorted.
+-}
+deDuplicate :: (Eq a, Ord a) => [a] -> [a]
+deDuplicate list = deDuplicate' (sort list) []
+    where   deDuplicate' [] _ = []
+            deDuplicate' (l:ls) dd
+                | not $ (l `elem` dd)   = l:(deDuplicate' ls (l:dd))
+                | otherwise             = deDuplicate' ls (l:dd)
+
 {-
 Promote a Char to a Symbol and return a new list with this new symbol
 appended to the second argument of this function.

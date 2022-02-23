@@ -110,17 +110,6 @@ rulesUsingDefinedSymbols rules nterms = leftSide rules && rightSide rules
             rightSide []        = True
             rightSide (r:rs)    = all (`elem` nterms) (snd r) && rightSide rs
 
--- TODO a deduplication function, where Ord is not needed - i.e. without sorting
-{-
-Deduplicate items in a list. The list is returned sorted.
--}
-deDuplicate :: (Eq a, Ord a) => [a] -> [a]
-deDuplicate list = deDuplicate' (sort list) []
-    where   deDuplicate' [] _ = []
-            deDuplicate' (l:ls) dd
-                | not $ (l `elem` dd)   = l:(deDuplicate' ls (l:dd))
-                | otherwise             = deDuplicate' ls (l:dd)
-
 {-
 Parse the rules from Handle 'fh', one per each line.
 -}
