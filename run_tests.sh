@@ -49,4 +49,10 @@ done
 
 rm -f $tempFile
 
+if [ $retval -eq 0 ]; then
+    echo -e "All tests ${GREEN}OK${NC}"
+else
+    echo -e "${RED}At least one test failed${NC}"
+fi
+
 exit $retval
