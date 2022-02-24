@@ -12,7 +12,7 @@ import System.IO
 
 -- Shorthand aliases
 noNumbering = (-1)
-emptySymbol = (Symbol '#' noNumbering)
+epsilon = (Symbol '#' noNumbering)
 
 -- Accessors for a triple
 fst3 :: (a, b, c) -> a
