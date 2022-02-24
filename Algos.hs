@@ -49,11 +49,10 @@ splitRule ((Symbol lhc lhi), (rhTerm:(Symbol rhc rhi):[])) rls nts
             rhTermFinal = (Symbol rhc rhi)
             interNt = last $ addCharAsSymbol lhc nts
             finalNt = last $ addCharAsSymbol lhc (interNt:nts)
-splitRule (Symbol lhc lhi, ((Symbol rhc rhi):rhs)) rls nts =
-    let leftSide = (Symbol lhc lhi)
-        rightSideFirst = (Symbol rhc rhi)
-        newNt = last $ addCharAsSymbol lhc nts
-    in splitRule (newNt, rhs) ((leftSide, [rightSideFirst, newNt]):rls) (newNt:nts)
+splitRule (Symbol lhc lhi, ((Symbol rhc rhi):rhs)) rls nts = splitRule (newNt, rhs) ((leftSide, [rightSideFirst, newNt]):rls) (newNt:nts)
+    where   leftSide = (Symbol lhc lhi)
+            rightSideFirst = (Symbol rhc rhi)
+            newNt = last $ addCharAsSymbol lhc nts
 
 
 -- TODO create my own elemIndex that does not return Maybe Int, since I don't need to
