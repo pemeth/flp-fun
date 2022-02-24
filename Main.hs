@@ -1,9 +1,11 @@
 {-
 Program entrypoint.
 
-Author: Patrik Nemeth
-Xlogin: xnemet04
-Email:  xnemet04@stud.fit.vutbr.cz
+Project:    plg-2-nka
+Year:       2021/2022
+Author:     Patrik Nemeth
+Xlogin:     xnemet04
+Email:      xnemet04@stud.fit.vutbr.cz
 -}
 import Data.List
 import System.Environment

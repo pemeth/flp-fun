@@ -1,5 +1,10 @@
-# Makefile for the flp-fun project
-# Author Patrik Nemeth
+# Makefile for the flp-fun project.
+#
+# Project:    plg-2-nka
+# Year:       2021/2022
+# Author:     Patrik Nemeth
+# Xlogin:     xnemet04
+# Email:      xnemet04@stud.fit.vutbr.cz
 
 SRC:=Main
 OUT:=flp21-fun

@@ -1,11 +1,12 @@
 {-
 Algorithms for transforming the input PLG to required outputs.
 
-Author: Patrik Nemeth
-Xlogin: xnemet04
-Email:  xnemet04@stud.fit.vutbr.cz
+Project:    plg-2-nka
+Year:       2021/2022
+Author:     Patrik Nemeth
+Xlogin:     xnemet04
+Email:      xnemet04@stud.fit.vutbr.cz
 -}
-
 module Algos where
 
 import Data.Char
