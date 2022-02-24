@@ -136,6 +136,7 @@ parseRule (c:'-':'>':rest)
     | otherwise = error ("Rule '" ++ [c,'-','>'] ++ rest ++ "' not valid")
     where   isSimple (c:"") = isUpper c
             isSimple _      = False
+            parseRuleRightSide ""  = error ("Right side of rule '" ++ [c,'-','>'] ++ rest ++ "' is empty")
             parseRuleRightSide "#" = ['#']
             parseRuleRightSide (s:"")
                 | isAlpha s = s:[]
