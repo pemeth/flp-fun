@@ -3,7 +3,7 @@
 
 ### Overview
 The output of this project is a haskell program that is capable of
-transforming right linear grammars into non-deterministic finite automata.
+transforming right linear grammars into non-deterministic finite-state automata.
 
 The source code is divided into multiple files:
 - Main.hs   contains the program entrypoint
