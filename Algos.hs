@@ -39,6 +39,12 @@ splitRule :: (Symbol, [Symbol]) -> [(Symbol, [Symbol])] -> [Symbol] -> ([(Symbol
 splitRule (_, []) rls nts = (rls, nts)
 splitRule (leftSide, ((Symbol '#' rhi):[])) rls nts = ((leftSide, rightSide):rls, nts)
     where   rightSide = [(Symbol '#' rhi)]
+splitRule ((Symbol lhc lhi), ((Symbol rhc rhi):[])) rls nts = ((leftSide, rightSideInter):(interNt, [epsilon]):rls, newNts)
+    where   interNt = last $ addCharAsSymbol lhc nts
+            leftSide = (Symbol lhc lhi)
+            rightSideInter = [(Symbol rhc rhi), interNt]
+            newNts = interNt:nts
+            epsilon = (Symbol '#' noNumbering)
 splitRule ((Symbol lhc lhi), (rhTerm:(Symbol rhc rhi):[])) rls nts
     | isUpper rhc = (((leftSide, [rhTerm, rhNterm])):rls, nts) -- Rightmost symbol is a non-terminal
     | otherwise   = ((leftSide, [rhTerm, interNt]):(interNt, [rhTermFinal, finalNt]):(finalNt, [epsilon]):rls, newNts) -- Rightmost symbol is a terminal
