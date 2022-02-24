@@ -1,0 +1,10 @@
+A,A0,B,C,C0
+a,b,c,d
+A
+A->aA0
+A0->aB
+B->#
+B->bC
+C->#
+C->cC0
+C0->cA
